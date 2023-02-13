@@ -9,6 +9,7 @@ using _Environments._Local;
 
 using UnityEngine.SceneManagement;
 using TMPro;
+using PoisonArch;
 
 public class Profile : MonoBehaviour
 {
@@ -52,6 +53,7 @@ public class Profile : MonoBehaviour
         if (ConnectionManager.Instance.GuestLoginTokenCreated == true || ConnectionManager.Instance.UserLoginTokenCreated == true)
         {
             SceneManager.LoadScene(1);
+            LevelManager.Instance.NextLevel();
         }
     }
     //splash

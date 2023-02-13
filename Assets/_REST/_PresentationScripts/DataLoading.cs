@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
 
+
 public class DataLoading : MonoBehaviour
 {
     #region Singleton
@@ -33,6 +34,7 @@ public class DataLoading : MonoBehaviour
         DontDestroyOnLoad(canvas);
 
         SceneManager.LoadSceneAsync(0);
+
     }
     void Start()
     {
