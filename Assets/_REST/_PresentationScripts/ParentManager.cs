@@ -13,6 +13,7 @@ public class ParentManager : MonoBehaviour
 {
     bool LoadingOKForLodingPanel = false;
 
+    [Header("UI Transactions")]
     public Transform MenuPanel;
     public Transform GameCategories;
     public Transform VideoCategories;
@@ -27,6 +28,13 @@ public class ParentManager : MonoBehaviour
     public TMP_Text KJIDText;
     public TMP_Text ParentName;
     public TMP_Text ChildName;
+
+    [Header("PosterButton")]
+    public GameObject PosterButton;
+    public Transform VideoCategoriesPosterButtonTransform;
+    public Transform GameCategoriesPosterButtonTransform;
+    public Transform VideoListPosterButtonTransform;
+    public Transform GameListPosterButtonTransform;
 
     private string _cachePath;
     private void Start()
@@ -45,6 +53,29 @@ public class ParentManager : MonoBehaviour
 
             //image
             StartCoroutine(SetUserAvatar(GetUser.GetMedia() + ConnectionManager.Instance.Avatar, ConnectionManager.Instance.ChildsName[0], ProfileAvatar));
+
+            for (int i = 0; i < 20; i++)
+            {
+                var VideoCategoryPosterButton = Instantiate(PosterButton, Vector3.zero, Quaternion.identity) as GameObject;
+                VideoCategoryPosterButton.transform.SetParent(VideoCategoriesPosterButtonTransform);
+                VideoCategoryPosterButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(197f, -324, 0);
+                VideoCategoryPosterButton.transform.localScale = Vector3.one;
+            }
+            foreach (Transform VideoPosterButtonChilditem in VideoCategoriesPosterButtonTransform)
+            {
+                if (VideoPosterButtonChilditem.GetSiblingIndex() % 2 == 0)
+                {
+                    VideoPosterButtonChilditem.GetComponent<RectTransform>().anchoredPosition = new Vector3(197f,
+                        (VideoPosterButtonChilditem.GetComponent<RectTransform>().anchoredPosition.y) + (-672f), 0);
+                }
+                else
+                {
+                    VideoPosterButtonChilditem.GetComponent<RectTransform>().anchoredPosition = new Vector3(628f,
+                        (VideoPosterButtonChilditem.GetComponent<RectTransform>().anchoredPosition.y) + (-672f), 0);
+                }
+            }
+
+
         }
         if (LoadingOKForLodingPanel == true)
         {
@@ -139,3 +170,7 @@ public class ParentManager : MonoBehaviour
         yield return null;
     }
 }
+
+
+//tekliler x 197 y baþlangý. -324 + -672 = -996
+//çiftliler x 628 y baþlangý. -324 + -672 = -996
