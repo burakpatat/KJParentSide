@@ -12670,6 +12670,8 @@ MonoBehaviour:
   PosterButton: {fileID: 7202179047041177759, guid: 1316352d69c6fcf40a38a3db947354cd, type: 3}
   VideoCategoriesPosterButtonTransform: {fileID: 740880016}
   GameCategoriesPosterButtonTransform: {fileID: 481005053}
+  VCP_LeftSide: []
+  VCP_RightSide: []
   VideoListPosterButtonTransform: {fileID: 0}
   GameListPosterButtonTransform: {fileID: 0}
 --- !u!1 &1385556296
