@@ -33,8 +33,7 @@ public class ParentManager : MonoBehaviour
     public GameObject PosterButton;
     public Transform VideoCategoriesPosterButtonTransform;
     public Transform GameCategoriesPosterButtonTransform;
-    [SerializeField] private List<Transform> VCP_LeftSide;
-    [SerializeField] private List<Transform> VCP_RightSide;
+    [SerializeField] private List<Transform> VCP_List;
     public Transform VideoListPosterButtonTransform;
     public Transform GameListPosterButtonTransform;
     bool PosterButtonSpawnOK = false;
@@ -57,44 +56,73 @@ public class ParentManager : MonoBehaviour
             //image
             StartCoroutine(SetUserAvatar(GetUser.GetMedia() + ConnectionManager.Instance.Avatar, ConnectionManager.Instance.ChildsName[0], ProfileAvatar));
 
-            if(PosterButtonSpawnOK == false)
+
+           
+            if (PosterButtonSpawnOK == false)
             {
                 PosterButtonSpawnOK = true;
 
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < 60; i++)
                 {
+
                     var VideoCategoryPosterButton = Instantiate(PosterButton, Vector3.zero, Quaternion.identity) as GameObject;
                     VideoCategoryPosterButton.transform.SetParent(VideoCategoriesPosterButtonTransform);
                     VideoCategoryPosterButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(197f, -324, 0);
                     VideoCategoryPosterButton.transform.localScale = Vector3.one;
 
+                    int c = 0, t = 1;
                     foreach (Transform VideoPosterButtonChilditem in VideoCategoriesPosterButtonTransform)
                     {
                         if (VideoPosterButtonChilditem.GetSiblingIndex() % 2 == 0)
                         {
-                            VideoPosterButtonChilditem.gameObject.name = "VideoCategoryPosterButton0";
+                            VideoPosterButtonChilditem.gameObject.name = "VideoCategoryPosterButton" + c.ToString();
+                            c += 2;
                         }
                         else
                         {
-                            VideoPosterButtonChilditem.gameObject.name = "VideoCategoryPosterButton1";
+                            VideoPosterButtonChilditem.gameObject.name = "VideoCategoryPosterButton" + t.ToString();
+                            t += 2;
                         }
                     }
-                    VCP_LeftSide.Add(VideoCategoryPosterButton.transform);
-
+                    VCP_List.Add(VideoCategoryPosterButton.transform);
                 }
             }
             if(PosterButtonSpawnOK == true)
             {
-                for (int l = 0; l < VCP_LeftSide.Count; l++)
-                {
-                    int index = VCP_LeftSide.FindIndex(a => a.gameObject.name == "VideoCategoryPosterButton0");
-                    int index1 = VCP_LeftSide.FindIndex(a => a.gameObject.name == "VideoCategoryPosterButton1");
+                int c = 0, t = 1; int Ypos = -324;
 
-                    VCP_LeftSide[index].GetComponent<RectTransform>().anchoredPosition = new Vector3(197f,
-                               (VCP_LeftSide[index].GetComponent<RectTransform>().anchoredPosition.y) + (-672f), 0);
-                    VCP_LeftSide[index1].GetComponent<RectTransform>().anchoredPosition = new Vector3(628f,
-                                (VCP_LeftSide[index1].GetComponent<RectTransform>().anchoredPosition.y) + (-672f), 0);
+                for (int l = 0; l < VCP_List.Count; l++)
+                {
+                    int PosterLindex = VCP_List.FindIndex(a => a.gameObject.name == "VideoCategoryPosterButton" + c.ToString());
+                    int PosterRindex = VCP_List.FindIndex(a => a.gameObject.name == "VideoCategoryPosterButton" + t.ToString());
+
+                    if (PosterRindex >= VCP_List.Count - 1)
+                        PosterLindex = VCP_List.Count - 2;
+
+                    if (l == 0 || l == 1)
+                    {
+                        VCP_List[PosterLindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(197f,
+                          -324, 0);
+                        VCP_List[PosterRindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(628f,
+                                    -324, 0);
+                    }
+                    else
+                    {
+                        VCP_List[PosterLindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(197f,
+                               (Ypos), 0);
+                        VCP_List[PosterRindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(628f,
+                                    (Ypos), 0);
+                    }
+
+                    if (l > 1 && PosterRindex < VCP_List.Count - 1)
+                    {
+                        c += 2; t += 2;
+                        Ypos += -672;
+                    }
+
                 }
+
+                PosterButtonSpawnOK = false;
             }
 
         }
