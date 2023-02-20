@@ -6695,7 +6695,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0130Z\u0130N VER\u0130LEN V\u0130DEOLAR"
+  m_text: "V\u0130DEOLAR"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4b77f78160c533a4c9cb3a4532e5441e, type: 2}
   m_sharedMaterial: {fileID: 772056309464139012, guid: 4b77f78160c533a4c9cb3a4532e5441e, type: 2}
@@ -12670,8 +12670,7 @@ MonoBehaviour:
   PosterButton: {fileID: 7202179047041177759, guid: 1316352d69c6fcf40a38a3db947354cd, type: 3}
   VideoCategoriesPosterButtonTransform: {fileID: 740880016}
   GameCategoriesPosterButtonTransform: {fileID: 481005053}
-  VCP_LeftSide: []
-  VCP_RightSide: []
+  VCP_List: []
   VideoListPosterButtonTransform: {fileID: 0}
   GameListPosterButtonTransform: {fileID: 0}
 --- !u!1 &1385556296
@@ -17398,7 +17397,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0130Z\u0130N VER\u0130LEN OYUNLAR"
+  m_text: OYUNLAR
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4b77f78160c533a4c9cb3a4532e5441e, type: 2}
   m_sharedMaterial: {fileID: 772056309464139012, guid: 4b77f78160c533a4c9cb3a4532e5441e, type: 2}

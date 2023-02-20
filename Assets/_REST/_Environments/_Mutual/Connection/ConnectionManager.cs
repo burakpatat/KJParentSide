@@ -183,6 +183,8 @@ namespace _Environments._Mutual.Connection
 
             yield return GetProfile.GetProfileDatas();
             _profiledatas = GetProfile.ProfileClass.data;
+
+            yield return GetCategories.GetCategoriesDatas();
         }
     }
 }

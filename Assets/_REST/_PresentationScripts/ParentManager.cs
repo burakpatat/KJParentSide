@@ -8,6 +8,8 @@ using TMPro;
 
 using _Environments._Mutual.Connection;
 using _Environments._Mutual.Data;
+using _Environments._Mutual.Data.State;
+using System.Linq;
 
 public class ParentManager : MonoBehaviour
 {
@@ -38,6 +40,12 @@ public class ParentManager : MonoBehaviour
     public Transform GameListPosterButtonTransform;
     bool PosterButtonSpawnOK = false;
 
+    [Header("DATAS")]
+    private List<Categories_Data> _CategoryDatas = new List<Categories_Data>();
+    private List<Video_Data> _VideoDatas = new List<Video_Data>();
+    private List<GData> _GameDatas = new List<GData>();
+    public string CategoryClickName;
+
     private string _cachePath;
     private void Start()
     {
@@ -56,19 +64,37 @@ public class ParentManager : MonoBehaviour
             //image
             StartCoroutine(SetUserAvatar(GetUser.GetMedia() + ConnectionManager.Instance.Avatar, ConnectionManager.Instance.ChildsName[0], ProfileAvatar));
 
+            //Categories
+            _VideoDatas = GetVideo.VideoClass.data;
 
-           
             if (PosterButtonSpawnOK == false)
             {
                 PosterButtonSpawnOK = true;
-
-                for (int i = 0; i < 60; i++)
+                var ControlSub = 0;
+                for (int i = 0; i < _VideoDatas.Count; i++)
                 {
-
+                    if(_VideoDatas[i].category[0].Categories_id.base_categories[0] == "video")
+                    {
+                        ControlSub = _VideoDatas.Where(a => a.category[0].Categories_id.sub_categories[0] == _VideoDatas[i].category[0].Categories_id.sub_categories[0]).Count();
+                        if (ControlSub > 1)
+                        {
+                            ControlSub = 1;
+                        }
+                    }
+                }
+                for (int control = 0; control < ControlSub; control++)
+                {
                     var VideoCategoryPosterButton = Instantiate(PosterButton, Vector3.zero, Quaternion.identity) as GameObject;
                     VideoCategoryPosterButton.transform.SetParent(VideoCategoriesPosterButtonTransform);
                     VideoCategoryPosterButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(197f, -324, 0);
                     VideoCategoryPosterButton.transform.localScale = Vector3.one;
+
+                    //Data Write
+                    VideoCategoryPosterButton.transform.GetChild(1).GetComponent<TMP_Text>().text = _VideoDatas[control].category[0].Categories_id.sub_categories[0];
+                    VideoCategoryPosterButton.GetComponent<Button>().onClick.AddListener(() =>
+                    {
+                        VideoCategoryClick(_VideoDatas[control].category[0].Categories_id.sub_categories[0]);
+                    });
 
                     int c = 0, t = 1;
                     foreach (Transform VideoPosterButtonChilditem in VideoCategoriesPosterButtonTransform)
@@ -133,6 +159,14 @@ public class ParentManager : MonoBehaviour
             DataLoading.Instance.HideLoading();
         }
     }
+    void VideoCategoryClick(string _categoryName)
+    {
+        CategoryClickName = _categoryName;
+
+        VideoListOpen();
+
+        DataLoading.Instance.ReOp();
+    }
     public void GameCategoryOpen()
     {
         GameCategories.gameObject.SetActive(true);
@@ -146,12 +180,12 @@ public class ParentManager : MonoBehaviour
     public void GameListOpen()
     {
         GameList.gameObject.SetActive(true);
-        MenuPanel.gameObject.SetActive(false);
+        GameCategories.gameObject.SetActive(false);
     }
     public void VideoListOpen()
     {
         VideoList.gameObject.SetActive(true);
-        MenuPanel.gameObject.SetActive(false);
+        VideoCategories.gameObject.SetActive(false);
     }
     public void GameDetailsOpen()
     {
