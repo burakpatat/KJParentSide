@@ -13,8 +13,7 @@ using System.Linq;
 
 public class ParentManager : MonoBehaviour
 {
-    bool LoadingOKForLodingPanel = false;
-
+    
     [Header("UI Transactions")]
     public Transform MenuPanel;
     public Transform GameCategories;
@@ -38,7 +37,10 @@ public class ParentManager : MonoBehaviour
     [SerializeField] private List<Transform> VCP_List;
     public Transform VideoListPosterButtonTransform;
     public Transform GameListPosterButtonTransform;
-    bool PosterButtonSpawnOK = false;
+    [SerializeField] private List<Transform> VLP_List;
+    bool VideoCategoryPosterButtonSpawnOK = false;
+    bool VideoListPosterButtonSpawnOK = false;
+    bool VideoListTranslate = false;
 
     [Header("DATAS")]
     private List<Categories_Data> _CategoryDatas = new List<Categories_Data>();
@@ -46,6 +48,9 @@ public class ParentManager : MonoBehaviour
     private List<GData> _GameDatas = new List<GData>();
     public string CategoryClickName;
 
+
+    bool AvatarLoadingOKForLodingPanel = false;
+    bool VideoListLoadingOKForLodingPanel = false;
     private string _cachePath;
     private void Start()
     {
@@ -64,16 +69,17 @@ public class ParentManager : MonoBehaviour
             //image
             StartCoroutine(SetUserAvatar(GetUser.GetMedia() + ConnectionManager.Instance.Avatar, ConnectionManager.Instance.ChildsName[0], ProfileAvatar));
 
-            //Categories
             _VideoDatas = GetVideo.VideoClass.data;
 
-            if (PosterButtonSpawnOK == false)
+            // Video Categories
+
+            if (VideoCategoryPosterButtonSpawnOK == false)
             {
-                PosterButtonSpawnOK = true;
+                VideoCategoryPosterButtonSpawnOK = true;
                 var ControlSub = 0;
                 for (int i = 0; i < _VideoDatas.Count; i++)
                 {
-                    if(_VideoDatas[i].category[0].Categories_id.base_categories[0] == "video")
+                    if (_VideoDatas[i].category[0].Categories_id.base_categories[0] == "video")
                     {
                         ControlSub = _VideoDatas.Where(a => a.category[0].Categories_id.sub_categories[0] == _VideoDatas[i].category[0].Categories_id.sub_categories[0]).Count();
                         if (ControlSub > 1)
@@ -113,56 +119,113 @@ public class ParentManager : MonoBehaviour
                     VCP_List.Add(VideoCategoryPosterButton.transform);
                 }
             }
-            if(PosterButtonSpawnOK == true)
+            if (VideoCategoryPosterButtonSpawnOK == true)
             {
-                int c = 0, t = 1; int Ypos = -324;
-
-                for (int l = 0; l < VCP_List.Count; l++)
-                {
-                    int PosterLindex = VCP_List.FindIndex(a => a.gameObject.name == "VideoCategoryPosterButton" + c.ToString());
-                    int PosterRindex = VCP_List.FindIndex(a => a.gameObject.name == "VideoCategoryPosterButton" + t.ToString());
-
-                    if (PosterRindex >= VCP_List.Count - 1)
-                        PosterLindex = VCP_List.Count - 2;
-
-                    if (l == 0 || l == 1)
-                    {
-                        VCP_List[PosterLindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(197f,
-                          -324, 0);
-                        VCP_List[PosterRindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(628f,
-                                    -324, 0);
-                    }
-                    else
-                    {
-                        VCP_List[PosterLindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(197f,
-                               (Ypos), 0);
-                        VCP_List[PosterRindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(628f,
-                                    (Ypos), 0);
-                    }
-
-                    if (l > 1 && PosterRindex < VCP_List.Count - 1)
-                    {
-                        c += 2; t += 2;
-                        Ypos += -672;
-                    }
-
-                }
-
-                PosterButtonSpawnOK = false;
+                CreatePosterTransform(VCP_List, "VideoCategoryPosterButton");
             }
 
         }
-        if (LoadingOKForLodingPanel == true)
+        if (AvatarLoadingOKForLodingPanel == true)
         {
-            LoadingOKForLodingPanel = false;
+            AvatarLoadingOKForLodingPanel = false;
 
             DataLoading.Instance.HideLoading();
+        }
+
+        //Video List After CategoryButtonClick
+
+        if (VideoListTranslate == true)
+        {
+            if (VideoListPosterButtonSpawnOK == false)
+            {
+                VideoListPosterButtonSpawnOK = true;
+
+                for (int i = 0; i < _VideoDatas.Count; i++)
+                {
+                    if (_VideoDatas[i].category[0].Categories_id.sub_categories[0] == CategoryClickName)
+                    {
+                        var VideoListPosterButton = Instantiate(PosterButton, Vector3.zero, Quaternion.identity) as GameObject;
+                        VideoListPosterButton.transform.SetParent(VideoListPosterButtonTransform);
+                        VideoListPosterButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(197f, -324, 0);
+                        VideoListPosterButton.transform.localScale = Vector3.one;
+
+                        //Poster
+                        StartCoroutine(SetVideoListPoster(GetUser.GetMedia() + _VideoDatas[i].videoThumbnail, _VideoDatas[i].videoname, VideoListPosterButton.transform.GetChild(0)));
+
+                        //Data Write
+                        VideoListPosterButton.transform.GetChild(1).GetComponent<TMP_Text>().text = _VideoDatas[i].videoname;
+
+                        int c = 0, t = 1;
+                        foreach (Transform VideoPosterButtonChilditem in VideoListPosterButtonTransform)
+                        {
+                            if (VideoPosterButtonChilditem.GetSiblingIndex() % 2 == 0)
+                            {
+                                VideoPosterButtonChilditem.gameObject.name = "VideoListPosterButton" + c.ToString();
+                                c += 2;
+                            }
+                            else
+                            {
+                                VideoPosterButtonChilditem.gameObject.name = "VideoListPosterButton" + t.ToString();
+                                t += 2;
+                            }
+                        }
+                        VLP_List.Add(VideoListPosterButton.transform);
+                    }
+                }
+            }
+            if (VideoListPosterButtonSpawnOK == true)
+            {
+                CreatePosterTransform(VLP_List, "VideoListPosterButton");
+
+                if (VideoListLoadingOKForLodingPanel == true)
+                {
+                    VideoListLoadingOKForLodingPanel = false;
+
+                    DataLoading.Instance.HideLoading();
+                }
+            }
+        }
+    }
+    void CreatePosterTransform(List<Transform> posterList, string _createdPosterName)
+    {
+        int c = 0, t = 1; int Ypos = -324;
+
+        for (int l = 0; l < posterList.Count; l++)
+        {
+            int PosterLindex = posterList.FindIndex(a => a.gameObject.name == _createdPosterName + c.ToString());
+            int PosterRindex = posterList.FindIndex(a => a.gameObject.name == _createdPosterName + t.ToString());
+
+            if (PosterRindex >= posterList.Count - 1)
+                PosterLindex = posterList.Count - 2;
+
+            if (l == 0 || l == 1)
+            {
+                posterList[PosterLindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(197f,
+                  -324, 0);
+                posterList[PosterRindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(628f,
+                            -324, 0);
+            }
+            else
+            {
+                posterList[PosterLindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(197f,
+                       (Ypos), 0);
+                posterList[PosterRindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(628f,
+                            (Ypos), 0);
+            }
+
+            if (l > 1 && PosterRindex < posterList.Count - 1)
+            {
+                c += 2; t += 2;
+                Ypos += -672;
+            }
+
         }
     }
     void VideoCategoryClick(string _categoryName)
     {
         CategoryClickName = _categoryName;
 
+        VideoListTranslate = true;
         VideoListOpen();
 
         DataLoading.Instance.ReOp();
@@ -247,7 +310,62 @@ public class ParentManager : MonoBehaviour
             _intanceObj.transform.GetComponent<Image>().sprite = Sprite.Create(_texture, rec, new Vector2(0, 0), 1);
 
             yield return new WaitForSeconds(.5f);
-            LoadingOKForLodingPanel = true;
+            AvatarLoadingOKForLodingPanel = true;
+        }
+
+        yield return null;
+    }
+    public IEnumerator SetVideoListPoster(string url, string name, Transform _intanceObj)
+    {
+        if (!Directory.Exists(_cachePath))
+        {
+            Debug.Log("No directory found for temporary files. Creating one.");
+            Directory.CreateDirectory(_cachePath);
+        }
+
+        string posterPath = _cachePath + "/" + DataTypeExtensions.RemoveDigits(name).ToLower() + "Avatar.poster";
+        bool valid = true;
+        Texture2D _texture = new Texture2D(1080, 1920);
+
+        if (System.IO.File.Exists(posterPath))
+        {
+            Debug.Log("Game visual exist :  " + posterPath);
+            System.TimeSpan since = System.DateTime.Now.Subtract(System.IO.File.GetLastWriteTime(posterPath));
+            if (since.Days >= 1)
+            {
+                valid = false;
+                Debug.Log("But visual is old :  " + since.Days + " days");
+            }
+        }
+        else
+        {
+            Debug.Log("Game visual does not exist :  " + posterPath);
+            valid = false;
+        }
+
+        if (!valid)
+        {
+            Debug.Log("Renewing cached visual for game " + name);
+            UnityWebRequest trq = UnityWebRequest.Get(url);
+            yield return trq.SendWebRequest();
+            if (trq.result == UnityWebRequest.Result.Success)
+            {
+                byte[] result = trq.downloadHandler.data;
+                System.IO.File.WriteAllBytes(posterPath, result);
+                valid = true;
+            }
+
+        }
+
+        if (valid)
+        {
+            _texture.LoadImage(System.IO.File.ReadAllBytes(posterPath));
+
+            Rect rec = new Rect(0, 0, _texture.width, _texture.height);
+            _intanceObj.transform.GetComponent<Image>().sprite = Sprite.Create(_texture, rec, new Vector2(0, 0), 1);
+
+            yield return new WaitForSeconds(.5f);
+            VideoListLoadingOKForLodingPanel = true;
         }
 
         yield return null;
