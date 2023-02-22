@@ -29,6 +29,7 @@ public class ParentManager : MonoBehaviour
     public TMP_Text KJIDText;
     public TMP_Text ParentName;
     public TMP_Text ChildName;
+    public TMP_Text AccountAreaMail;
 
     [Header("PosterButton")]
     public GameObject PosterButton;
@@ -65,6 +66,7 @@ public class ParentManager : MonoBehaviour
             KJIDText.text = ConnectionManager.Instance.AuthID_KJ;
             ParentName.text = ConnectionManager.Instance.AuthName;
             ChildName.text = ConnectionManager.Instance.ChildsName[0];
+            AccountAreaMail.text = Login.LoginMail;
 
             //image
             StartCoroutine(SetUserAvatar(GetUser.GetMedia() + ConnectionManager.Instance.Avatar, ConnectionManager.Instance.ChildsName[0], ProfileAvatar));
@@ -96,7 +98,7 @@ public class ParentManager : MonoBehaviour
                     VideoCategoryPosterButton.transform.localScale = Vector3.one;
 
                     //Data Write
-                    VideoCategoryPosterButton.transform.GetChild(1).GetComponent<TMP_Text>().text = _VideoDatas[control].category[0].Categories_id.sub_categories[0];
+                    VideoCategoryPosterButton.transform.GetChild(2).GetComponent<TMP_Text>().text = _VideoDatas[control].category[0].Categories_id.sub_categories[0];
                     VideoCategoryPosterButton.GetComponent<Button>().onClick.AddListener(() =>
                     {
                         VideoCategoryClick(_VideoDatas[control].category[0].Categories_id.sub_categories[0]);
@@ -150,10 +152,12 @@ public class ParentManager : MonoBehaviour
                         VideoListPosterButton.transform.localScale = Vector3.one;
 
                         //Poster
-                        StartCoroutine(SetVideoListPoster(GetUser.GetMedia() + _VideoDatas[i].videoThumbnail, _VideoDatas[i].videoname, VideoListPosterButton.transform.GetChild(0)));
+                        VideoListPosterButton.transform.GetChild(1).gameObject.SetActive(true);
+                        StartCoroutine(SetVideoListPoster(GetUser.GetMedia() + _VideoDatas[i].videoThumbnail, _VideoDatas[i].videoname, VideoListPosterButton.transform.GetChild(1)));
 
                         //Data Write
-                        VideoListPosterButton.transform.GetChild(1).GetComponent<TMP_Text>().text = _VideoDatas[i].videoname;
+                        VideoListPosterButton.transform.GetChild(2).GetComponent<TMP_Text>().color = Color.black;
+                        VideoListPosterButton.transform.GetChild(2).GetComponent<TMP_Text>().text = _VideoDatas[i].videoname;
 
                         int c = 0, t = 1;
                         foreach (Transform VideoPosterButtonChilditem in VideoListPosterButtonTransform)
@@ -204,6 +208,11 @@ public class ParentManager : MonoBehaviour
                   -324, 0);
                 posterList[PosterRindex].GetComponent<RectTransform>().anchoredPosition = new Vector3(628f,
                             -324, 0);
+            }
+            else if (l == 2)
+            {
+                posterList[^1].GetComponent<RectTransform>().anchoredPosition = new Vector3(197f,
+                  -996, 0);
             }
             else
             {

@@ -7540,8 +7540,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 76
-  m_fontSizeBase: 76
+  m_fontSize: 66
+  m_fontSizeBase: 66
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -12292,6 +12292,7 @@ MonoBehaviour:
   KJIDText: {fileID: 98442486}
   ParentName: {fileID: 168244646}
   ChildName: {fileID: 2015572643}
+  AccountAreaMail: {fileID: 1665634361}
   PosterButton: {fileID: 7202179047041177759, guid: 1316352d69c6fcf40a38a3db947354cd, type: 3}
   VideoCategoriesPosterButtonTransform: {fileID: 740880016}
   GameCategoriesPosterButtonTransform: {fileID: 481005053}
