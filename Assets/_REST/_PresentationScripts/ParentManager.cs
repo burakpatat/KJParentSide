@@ -41,13 +41,18 @@ public class ParentManager : MonoBehaviour
     [SerializeField] private List<Transform> VLP_List;
     bool VideoCategoryPosterButtonSpawnOK = false;
     bool VideoListPosterButtonSpawnOK = false;
+
+    [Header("Video Details")]
+
     bool VideoListTranslate = false;
+    bool VideoDetailsTranslate = false;
 
     [Header("DATAS")]
     private List<Categories_Data> _CategoryDatas = new List<Categories_Data>();
     private List<Video_Data> _VideoDatas = new List<Video_Data>();
     private List<GData> _GameDatas = new List<GData>();
     public string CategoryClickName;
+    public int VideoDetailClickId;
 
 
     bool AvatarLoadingOKForLodingPanel = false;
@@ -68,7 +73,7 @@ public class ParentManager : MonoBehaviour
             ChildName.text = ConnectionManager.Instance.ChildsName[0];
             AccountAreaMail.text = Login.LoginMail;
 
-            //image
+            //User Avatar for Menu
             StartCoroutine(SetUserAvatar(GetUser.GetMedia() + ConnectionManager.Instance.Avatar, ConnectionManager.Instance.ChildsName[0], ProfileAvatar));
 
             _VideoDatas = GetVideo.VideoClass.data;
@@ -189,6 +194,20 @@ public class ParentManager : MonoBehaviour
                 }
             }
         }
+
+
+        //Video Details After ListButtonClick
+
+        if (VideoDetailsTranslate == true)
+        {
+            foreach (var videoDetails in _VideoDatas)
+            {
+                if(videoDetails.id == VideoDetailClickId)
+                {
+
+                }
+            }
+        }
     }
     void CreatePosterTransform(List<Transform> posterList, string _createdPosterName)
     {
@@ -239,6 +258,15 @@ public class ParentManager : MonoBehaviour
 
         DataLoading.Instance.ReOp();
     }
+    void VideoListClick(int _id)
+    {
+        VideoDetailClickId = _id;
+
+        VideoDetailsTranslate = true;
+        VideoDetailsOpen();
+
+        DataLoading.Instance.ReOp();
+    }
     public void GameCategoryOpen()
     {
         GameCategories.gameObject.SetActive(true);
@@ -267,7 +295,7 @@ public class ParentManager : MonoBehaviour
     public void VideoDetailsOpen()
     {
         VideoDetails.gameObject.SetActive(true);
-        MenuPanel.gameObject.SetActive(false);
+        VideoList.gameObject.SetActive(false);
     }
     public IEnumerator SetUserAvatar(string url, string name, Transform _intanceObj)
     {

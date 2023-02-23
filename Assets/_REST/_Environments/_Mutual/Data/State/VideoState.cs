@@ -13,6 +13,7 @@ namespace _Environments._Mutual.Data.State
         public string videoname;
         public List<string> isInteractive;
         public string videoThumbnail;
+        public string VideoThumbnail_Horizontal;
         public List<Video_Category> category;
         public List<IVideo_Question> questions;
     }

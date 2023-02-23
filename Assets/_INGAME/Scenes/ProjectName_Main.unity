@@ -12301,6 +12301,7 @@ MonoBehaviour:
   GameListPosterButtonTransform: {fileID: 0}
   VLP_List: []
   CategoryClickName: 
+  VideoDetailClickId: 0
 --- !u!1 &1412840407
 GameObject:
   m_ObjectHideFlags: 0
