@@ -52,7 +52,7 @@ public class ParentManager : MonoBehaviour
     private List<Video_Data> _VideoDatas = new List<Video_Data>();
     private List<GData> _GameDatas = new List<GData>();
     public string CategoryClickName;
-    public int VideoDetailClickId;
+    public string CategoryClickTitle;
 
 
     bool AvatarLoadingOKForLodingPanel = false;
@@ -202,7 +202,7 @@ public class ParentManager : MonoBehaviour
         {
             foreach (var videoDetails in _VideoDatas)
             {
-                if(videoDetails.id == VideoDetailClickId)
+                if(videoDetails.category[0].Categories_id.category_title == CategoryClickTitle)
                 {
 
                 }
@@ -258,9 +258,9 @@ public class ParentManager : MonoBehaviour
 
         DataLoading.Instance.ReOp();
     }
-    void VideoListClick(int _id)
+    void VideoListClick(string _categorytitle)
     {
-        VideoDetailClickId = _id;
+        CategoryClickTitle = _categorytitle;
 
         VideoDetailsTranslate = true;
         VideoDetailsOpen();
